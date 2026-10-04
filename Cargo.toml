@@ -1,0 +1,28 @@
+[package]
+name = "pixelify"
+version = "0.1.0"
+edition = "2021"
+description = "A desktop pixel-art conversion and background-removal studio"
+license = "MIT"
+
+[lib]
+name = "pixelify_core"
+path = "src/lib.rs"
+
+[[bin]]
+name = "pixelify"
+path = "src/main.rs"
+
+[dependencies]
+eframe = { version = "0.31", default-features = false, features = ["default_fonts", "glow", "x11", "wayland"] }
+egui_extras = { version = "0.31", features = ["svg"] }
+image = { version = "0.25", default-features = true }
+lucide-static-svg = "1.51"
+rfd = "0.15"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+zip = { version = "2", default-features = false, features = ["deflate"] }
+
+[dev-dependencies]
+tempfile = "3"
