@@ -7,6 +7,7 @@ stage_root=$(mktemp -d /tmp/pixelify-build.XXXXXX)
 stage_app="$stage_root/Pixelify.app"
 stage_icons="$stage_root/Pixelify.iconset"
 mkdir -p "$stage_app/Contents/MacOS" "$stage_app/Contents/Resources" "$stage_icons" dist
+rm -rf dist/Pixelify.app dist/Pixelify-macOS.zip
 cp target/release/pixelify "$stage_app/Contents/MacOS/pixelify"
 cp packaging/Info.plist "$stage_app/Contents/Info.plist"
 cargo run --release --locked --example app_icon
@@ -19,5 +20,7 @@ iconutil -c icns "$stage_icons" -o "$stage_app/Contents/Resources/Pixelify.icns"
 xattr -cr "$stage_app"
 codesign --force --sign - "$stage_app"
 codesign --verify --deep --strict "$stage_app"
+# `dist` can be a File Provider-backed folder. Archive the clean, signed
+# staging app before Finder/File Provider metadata can be added to its copy.
 ditto --norsrc -c -k --keepParent "$stage_app" dist/Pixelify-macOS.zip
 ditto --norsrc "$stage_app" dist/Pixelify.app
